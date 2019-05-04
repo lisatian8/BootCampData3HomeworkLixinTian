@@ -1,0 +1,186 @@
+Sub alphabtical_testing()
+'Finds the last non-blank cell in a single row or column
+
+' Part 1: Find 1Row and 1Col
+Dim lRow As Long
+Dim lCol As Long
+    
+    'Find the last non-blank cell in column A(1)
+    lRow = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    'Find the last non-blank cell in row 1
+    lCol = Cells(1, Columns.Count).End(xlToLeft).column
+    
+    MsgBox "Last Row: " & lRow & vbNewLine & _
+            "Last Column: " & lCol
+  
+
+
+
+' Part 2: Find Ticker and Total Stock Volume
+  ' Set a variable for specifying the column of interest
+ Dim column As Integer
+ Dim columnTotal As Integer
+ Dim volTotal As Integer
+
+ Dim columnOpen As Integer
+ Dim columnClose As Integer
+ 
+ Dim openValue As Double
+ 
+ 
+  column = 1
+  columnVol = 7
+  columnOpen = 3
+  columnClose = 6
+  columnTotal = 9
+  
+  rowCounter = 2
+  totalVol = 0
+
+  openValue = Cells(2, 3).Value
+  'closeValue = Cells(1,6).Value
+  
+  ' Loop through rows in the column
+  For i = 2 To lRow
+  
+    totalVol = totalVol + Cells(i, 7).Value
+    'MsgBox (totalVol)
+
+    ' Searches for when the value of the next cell is different than that of the current cell
+    If Cells(i + 1, column).Value <> Cells(i, column).Value Then
+    
+       Cells(rowCounter, columnTotal).Value = Cells(i, column).Value
+       Cells(rowCounter, columnTotal + 3).Value = totalVol
+ 
+
+       
+       
+       If (openValue = 0) And (Cells(i, column + 5).Value = 0) Then
+          Cells(rowCounter, columnTotal + 1).Value = 0
+          Cells(rowCounter, columnTotal + 2).Value = 0
+          'blue
+          Cells(rowCounter, columnTotal + 1).Interior.ColorIndex = 8
+         
+         ' Cells(rowCounter, columnTotal + 1).NumberFormat = "0"
+          'Cells(rowCounter, columnTotal + 2).NumberFormat = "Percent"
+          
+          MsgBox ("Here 1")
+
+       ElseIf (openValue <> 0) And (Cells(i, column + 5).Value <> 0) Then
+         Cells(rowCounter, columnTotal + 1).Value = Cells(i, column + 5).Value - openValue
+         Cells(rowCounter, columnTotal + 2).Value = (Cells(i, column + 5).Value - openValue) / openValue
+        ' Cells(rowCounter, columnTotal + 1).NumberFormat = "0.00"
+        ' Cells(rowCounter, columnTotal + 2).NumberFormat = "Percent"
+         
+           If Cells(i, column + 5).Value - openValue > 0 Then
+              'green
+              Cells(rowCounter, columnTotal + 1).Interior.ColorIndex = 4
+           ElseIf Cells(i, column + 5).Value - openValue < 0 Then
+               'red
+               Cells(rowCounter, columnTotal + 1).Interior.ColorIndex = 3
+           'ElseIf Cells(i, column + 5).Value - openValue) = 0   Then
+               'light purple
+              ' Cells(rowCounter, columnTotal + 1).Interior.ColorIndex = 17
+           
+           End If
+         
+
+       End If
+       
+      ' Message Box the value of the current cell and value of the next cell
+      'MsgBox (Cells(i, column).Value & " and then " & Cells(i + 1, column).Value)
+      
+      totalVol = 0
+      rowCounter = rowCounter + 1
+      
+      openValue = Cells(i + 1, column + 2).Value
+
+    End If
+
+  Next i
+
+
+' Part 3: Find 1Row and 1Col for hard
+Dim lRowHard As Long
+Dim lColHard As Long
+
+    
+    'Find the last non-blank cell in column A(1)
+    lRowHard = Cells(Rows.Count, 9).End(xlUp).Row
+    
+    'Find the last non-blank cell in row 1
+    lColHard = Cells(1, Columns.Count).End(xlToLeft).column
+    
+    MsgBox "Last RowHard: " & lRowHard & vbNewLine & _
+            "Last ColumnHard: " & lColHard
+            
+            
+columnHard = 9
+
+GreatPercentIncrease = 0
+GreatPercentDecrease = 0
+GreatTotalVolume = 0
+
+
+
+
+ For k = 2 To lRowHard
+  
+
+    ' Searches for when the value of the cell is than current GreatPercentIncrease
+   ' If Cells(k, columnHard + 2).Value > GreatPercentIncrease Then
+    
+    '   GreatPercentIncrease = Cells(k, columhHard + 2).Value
+   '    GreatPercentIncreaseTicker = Cells(k, columnHard).Value
+    
+ '   End If
+    
+    If Cells(k, columnHard + 2).Value > GreatPercentIncrease Then
+    
+       GreatPercentIncrease = Cells(k, columnHard + 2).Value
+       GreatPercentIncreaseTicker = Cells(k, columnHard).Value
+    
+    End If
+    
+    If Cells(k, columnHard + 2).Value < GreatPercentDecrease Then
+    
+       GreatPercentDecrease = Cells(k, columnHard + 2).Value
+       GreatPercentDecreaseTicker = Cells(k, columnHard).Value
+    
+    End If
+    
+    
+   '
+   If Cells(k, columnHard + 3).Value > GreatTotalVolume Then
+    
+       GreatTotalVolume = Cells(k, columnHard + 3).Value
+       GreatTotalVolumeTicker = Cells(k, columnHard).Value
+    
+    End If
+    
+   
+  Next k
+  
+  Cells(2, columnHard + 6).Value = "Great % Increase"
+  Cells(3, columnHard + 6).Value = "Great % Decrease"
+  Cells(4, columnHard + 6).Value = "Great Total Volume"
+
+
+  Cells(2, columnHard + 7).Value = GreatPercentIncreaseTicker
+  Cells(3, columnHard + 7).Value = GreatPercentDecreaseTicker
+  Cells(4, columnHard + 7).Value = GreatTotalVolumeTicker
+  
+  
+  Cells(2, columnHard + 8).Value = GreatPercentIncrease
+  Cells(3, columnHard + 8).Value = GreatPercentDecrease
+  Cells(4, columnHard + 8).Value = GreatTotalVolume
+  
+
+End Sub
+
+
+
+
+
+
